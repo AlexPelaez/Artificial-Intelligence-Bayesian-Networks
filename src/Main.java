@@ -1,10 +1,9 @@
 public class Main {
 
     public static void main(String[] args) {
-       VariableElimination variableElimination;
-
-
-
+        VariableElimination variableElimination = new VariableElimination();
+        Graph graph = new Graph("/Users/Alex/Documents/School/AI/Artificial-Intelligence-Bayesian-Networks/inputs/alarm.bif");
+        variableElimination.loadNewGraph(graph);
 
 
     }

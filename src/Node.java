@@ -7,10 +7,12 @@ public class Node {
     private ArrayList<Node> children;
     private double[] conditionalProbabilityTable;
     private String[] possibleValues;
+    private String name;
     private int numPossibleValues;
 
-    public Node(String[] possibleValues) {
-
+    public Node(String name, String[] possibleValues) {
+        this.name = name;
+        this.possibleValues = possibleValues;
     }
 
     public void updateConditionalProbabilityTable(double[][] cpt){
