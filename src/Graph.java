@@ -102,12 +102,11 @@ public class Graph {
                 }
             }
         } catch(FileNotFoundException e) {
-            System.out.println("Exception: File Not Found. Graph was not created");
+            System.out.println("Exception Handled: File Was Not Found. Graph was not created");
             return false;
         }
         return true;
     }
-
 
     private int getNodeByName(String nodeName){
         for(int i = 0; i < nodes.size(); i++){
