@@ -15,6 +15,9 @@ public class Graph {
      *
      * Graph: Constructor for the Graph class. Calls createGraphFromBif method
      *
+     * Returns:
+     * Graph: a Graph object representing the bays net
+     *
      */
     public Graph(String filePath){
         this.file = new File(filePath);
@@ -87,9 +90,7 @@ public class Graph {
                             String[] currentProbabilityLineSplit = currentLine.split(" ");
 
                             for (int m = 0; m < currentProbabilityLineSplit.length; m++){
-
                                 String stringToParse = currentProbabilityLineSplit[m];
-
                                 if(stringToParse.length() != 0){
                                     stringToParse = stringToParse.substring(0, stringToParse.length() - 1);
                                 }
@@ -102,6 +103,7 @@ public class Graph {
                                 }
                             }
                         }
+                        // Update each nodes conditional probability table
                         nodes.get(getNodeByName(nodeNames[0])).
                                 updateConditionalProbabilityTable(conditionalProbabilityTable, nodeNames[0]);
 
@@ -133,12 +135,22 @@ public class Graph {
                 }
             }
         } catch(FileNotFoundException e) {
+            // Handle any FileNotFoundExceptions that occur when attempting to read in files
             System.out.println("Exception Handled: File Was Not Found. Graph was not created");
             return false;
         }
         return true;
     }
 
+    /**
+     * Parameters:
+     * String nodeName: representing the name of the node to be found
+     *
+     * getNodeByName: grabs the index of the node with the matching name
+     *
+     * Return:
+     * Int: index of the node in the nodes list
+     */
     private int getNodeByName(String nodeName){
         for(int i = 0; i < nodes.size(); i++){
             if(nodes.get(i).getNodeName().equals(nodeName)){
