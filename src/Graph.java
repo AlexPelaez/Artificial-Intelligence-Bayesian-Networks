@@ -4,22 +4,39 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created by Alex on 4/2/20.
+ * The Graph class is a data structure that represents a bays net graph
  */
 public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
     private File file;
-
+    /**
+     * Parameters:
+     * String filePath: a String representing the path to the input file.
+     *
+     * Graph: Constructor for the Graph class. Calls createGraphFromBif method
+     *
+     */
     public Graph(String filePath){
         this.file = new File(filePath);
         createGraphFromBif();
     }
-
+    /**
+     * Parameters:
+     * None
+     *
+     * createGraphFromBif: populates the nodes in the nodes instance field. Updates each nodes conditional
+     * probability table. Updates each nodes children list. Updates each nodes parents list.
+     *
+     * Return:
+     * True: if graph was created
+     * False: if graph was not created
+     */
     private boolean createGraphFromBif(){
         try {
             Scanner s = new Scanner(file);
             while (s.hasNextLine()){
                 String currentLine = s.nextLine();
+                // If the line we are parsing contains 'variable' then we want to create a new node
                 if(currentLine.contains("variable")){
                     // Create nodes
                     String[] variableLine = currentLine.split(" ");
@@ -37,7 +54,11 @@ public class Graph {
                         possibleValues[i] = currentPossibleValue;
                     }
                   nodes.add(new Node(variableName, possibleValues));
+                    // If the line we are parsing contains 'probability' then we want to create a conditional
+                    // probability table for the corresponding node. We must also update the children and parents list
+                    // to reflect any new child or parent nodes.
                 } else if(currentLine.contains("probability")){
+                    System.out.println(currentLine);
                     // Update nodes with there corresponding conditional probability tables
                     String[] probabilityLine = currentLine.split(" ");
                     String nodeNames[] = new String[probabilityLine.length-4];
@@ -58,19 +79,27 @@ public class Graph {
                         for(int i = 1; i < nodeNames.length-1; i++){
                             numberOfProbabilityLines *= nodes.get(getNodeByName(nodeNames[i])).getNumPossibleValues();
                         }
-                        String[][] currentProbabilityLines = new String[numberOfProbabilityLines][];
-                        for(int i = 0; i < numberOfProbabilityLines; i++){
-                            currentProbabilityLines[i] = s.nextLine().split(" ");
-                        }
-                        int count = 0;
                         double[] conditionalProbabilityTable = new double[numberOfProbabilites*numberOfProbabilityLines];
-                        for(int b = 0; b < numberOfProbabilites; b++){
-                            for(int i = 0; i < numberOfProbabilityLines; i++){
-                                conditionalProbabilityTable[count] =
-                                        Double.parseDouble(currentProbabilityLines[i][b+2+numberOfProbabilityLines/2].
-                                                substring(0, currentProbabilityLines[i][b+2+numberOfProbabilityLines/2].
-                                                        length() - 1));
-                                count++;
+                        int count = 0;
+                        for(int i = 0; i < numberOfProbabilityLines; i++){
+                            currentLine = s.nextLine();
+                            System.out.println(currentLine);
+                            String[] currentProbabilityLineSplit = currentLine.split(" ");
+
+                            for (int m = 0; m < currentProbabilityLineSplit.length; m++){
+
+                                String stringToParse = currentProbabilityLineSplit[m];
+
+                                if(stringToParse.length() != 0){
+                                    stringToParse = stringToParse.substring(0, stringToParse.length() - 1);
+                                }
+                                try{
+                                    conditionalProbabilityTable[count] = Double.parseDouble(stringToParse);
+                                    count++;
+                                }catch (Exception e){
+                                    // Catch any of the exceptions thrown when the string we are trying to parse
+                                    // is not a number.
+                                }
                             }
                         }
                         nodes.get(getNodeByName(nodeNames[0])).
@@ -78,15 +107,17 @@ public class Graph {
 
                         // add parents for each Node
                         for(int i = 1; i < nodeNames.length-1; i++){
-                            nodes.get((getNodeByName(nodeNames[0]))).addParentNode(nodes.get(getNodeByName(nodeNames[i])));
+                            nodes.get((getNodeByName(nodeNames[0]))).
+                                    addParentNode(nodes.get(getNodeByName(nodeNames[i])));
                         }
 
                         // add children for each Node
                         for(int i = 1; i < nodeNames.length-1; i++){
-                            nodes.get((getNodeByName(nodeNames[i]))).addChildNode(nodes.get(getNodeByName(nodeNames[0])));
+                            nodes.get((getNodeByName(nodeNames[i]))).
+                                    addChildNode(nodes.get(getNodeByName(nodeNames[0])));
                         }
                     } else {
-                        //deal with table formatted probabilites
+                        //Handle table formatted probabilites
                         nodeNames[0] = probabilityLine[2];
                         int numberOfProbabilites = nodes.get(getNodeByName(nodeNames[0])).getNumPossibleValues();
                         currentLine = s.nextLine();

@@ -44,14 +44,14 @@ public class Node {
     public void addChildNode(Node child){
         if(!(isNodeInList(child.getNodeName(), children))) {
             parents.add(child);
-            System.out.println(name + " added new child: "+child.getNodeName());
+//            System.out.println(name + " added new child: "+child.getNodeName());
         }
     }
 
     public void addParentNode(Node parent){
         if(!(isNodeInList(parent.getNodeName(), parents))) {
             parents.add(parent);
-            System.out.println(name + " added new parent: "+parent.getNodeName());
+//            System.out.println(name + " added new parent: "+parent.getNodeName());
         }
     }
 
