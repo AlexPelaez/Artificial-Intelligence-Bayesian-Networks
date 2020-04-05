@@ -93,7 +93,7 @@ public class Graph {
                             // Uncomment if you want to view original CPT as read in by the file
 //                            System.out.println(currentLine);
                             String[] currentProbabilityLineSplit = currentLine.split(" ");
-
+                            int givenCounter = 1;
                             for (int m = 0; m < currentProbabilityLineSplit.length; m++){
                                 String stringToParse = currentProbabilityLineSplit[m];
                                 if(stringToParse.length() != 0){
@@ -102,11 +102,20 @@ public class Graph {
                                 try{
                                     conditionalProbabilityTable[count] = Double.parseDouble(stringToParse);
                                     count++;
+                                    givenCounter = 1;
                                 }catch (Exception e){
                                     if(!(stringToParse.equals(""))){
                                         if(stringToParse.contains("(")){
                                             stringToParse = stringToParse.substring(1, stringToParse.length());
+                                            stringToParse = nodeNames[givenCounter].concat(";"+stringToParse);
+                                            givenCounter++;
+                                        } else {
+                                            stringToParse = nodeNames[givenCounter].concat(";"+stringToParse);
+                                            givenCounter++;
                                         }
+
+
+
                                         conditionalProbabilityTableString[stringCount] = stringToParse;
                                         stringCount++;
                                     }
