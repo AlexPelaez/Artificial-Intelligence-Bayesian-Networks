@@ -8,9 +8,11 @@ public class Node {
     private ArrayList<Node> children = new ArrayList<Node>();
     private ArrayList<Node> parents = new ArrayList<Node>();
     private double[] conditionalProbabilityTable;
+    private String[] conditionalProbabilityTableString;
     private String[] possibleValues;
     private String name;
     private int numPossibleValues;
+    private boolean marked;
     /**
      * Parameters:
      * String name: a String representing the name of the Node
@@ -25,6 +27,12 @@ public class Node {
         this.name = name;
         this.possibleValues = possibleValues;
         this.numPossibleValues = possibleValues.length;
+    }
+
+    public void updateConditionalProbabilityTableString(String[] cpt, String nodeName){
+        this.conditionalProbabilityTableString = cpt;
+        this.name = nodeName;
+        printConditionalProbabilityTableString();
     }
     /**
      * Parameters:
@@ -52,7 +60,7 @@ public class Node {
      */
     public void addChildNode(Node child){
         if(!(isNodeInList(child.getNodeName(), children))) {
-            parents.add(child);
+            children.add(child);
 //            System.out.println(name + " added new child: "+child.getNodeName());
         }
     }
@@ -97,6 +105,34 @@ public class Node {
         return numPossibleValues;
     }
 
+    public boolean getMarked(){
+        return marked;
+    }
+
+    public void setMarked(boolean x){
+        marked = x;
+    }
+
+    public double[] getConditionalProbabilityTable(){
+        return conditionalProbabilityTable;
+    }
+
+    public String[] getConditionalProbabilityTableString(){
+        return conditionalProbabilityTableString;
+    }
+
+
+    public ArrayList<Node> getChildren(){
+        return children;
+    }
+
+    public ArrayList<Node> getParents(){
+        return parents;
+    }
+
+    public String[] getPossibleValues(){
+        return possibleValues;
+    }
     /**
      * Parameters:
      * String nodeName: the name of the node to search for
@@ -127,6 +163,20 @@ public class Node {
     private void printConditionalProbabilityTable() {
         for(int i = 0; i < conditionalProbabilityTable.length; i++){
             System.out.println(conditionalProbabilityTable[i]);
+        }
+    }
+    /**
+     * Parameters:
+     * none
+     *
+     * printConditionalProbabilityTableString: prints the String conditional probability table associated with the Node
+     *
+     * Return:
+     * none
+     */
+    private void printConditionalProbabilityTableString() {
+        for(int i = 0; i < conditionalProbabilityTableString.length; i++){
+            System.out.println(conditionalProbabilityTableString[i]);
         }
     }
 }

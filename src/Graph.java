@@ -23,6 +23,9 @@ public class Graph {
         this.file = new File(filePath);
         createGraphFromBif();
     }
+    public ArrayList<Node> getNodeList(){
+        return nodes;
+    }
     /**
      * Parameters:
      * None
@@ -61,7 +64,6 @@ public class Graph {
                     // probability table for the corresponding node. We must also update the children and parents list
                     // to reflect any new child or parent nodes.
                 } else if(currentLine.contains("probability")){
-                    System.out.println(currentLine);
                     // Update nodes with there corresponding conditional probability tables
                     String[] probabilityLine = currentLine.split(" ");
                     String nodeNames[] = new String[probabilityLine.length-4];
@@ -83,10 +85,13 @@ public class Graph {
                             numberOfProbabilityLines *= nodes.get(getNodeByName(nodeNames[i])).getNumPossibleValues();
                         }
                         double[] conditionalProbabilityTable = new double[numberOfProbabilites*numberOfProbabilityLines];
+                        String[] conditionalProbabilityTableString = new String[numberOfProbabilites*numberOfProbabilityLines];
                         int count = 0;
+                        int stringCount = 0;
                         for(int i = 0; i < numberOfProbabilityLines; i++){
                             currentLine = s.nextLine();
-                            System.out.println(currentLine);
+                            // Uncomment if you want to view original CPT as read in by the file
+//                            System.out.println(currentLine);
                             String[] currentProbabilityLineSplit = currentLine.split(" ");
 
                             for (int m = 0; m < currentProbabilityLineSplit.length; m++){
@@ -98,6 +103,13 @@ public class Graph {
                                     conditionalProbabilityTable[count] = Double.parseDouble(stringToParse);
                                     count++;
                                 }catch (Exception e){
+                                    if(!(stringToParse.equals(""))){
+                                        if(stringToParse.contains("(")){
+                                            stringToParse = stringToParse.substring(1, stringToParse.length());
+                                        }
+                                        conditionalProbabilityTableString[stringCount] = stringToParse;
+                                        stringCount++;
+                                    }
                                     // Catch any of the exceptions thrown when the string we are trying to parse
                                     // is not a number.
                                 }
@@ -106,6 +118,8 @@ public class Graph {
                         // Update each nodes conditional probability table
                         nodes.get(getNodeByName(nodeNames[0])).
                                 updateConditionalProbabilityTable(conditionalProbabilityTable, nodeNames[0]);
+                        nodes.get(getNodeByName(nodeNames[0])).
+                                updateConditionalProbabilityTableString(conditionalProbabilityTableString, nodeNames[0]);
 
                         // add parents for each Node
                         for(int i = 1; i < nodeNames.length-1; i++){
