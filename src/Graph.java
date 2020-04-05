@@ -1,7 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 /**
  * The Graph class is a data structure that represents a bays net graph
@@ -50,14 +53,14 @@ public class Graph {
                     currentLine = s.nextLine();
                     String[] possibleValuesLine = currentLine.split(" ");
                     int numberOfPossibleValues = Integer.parseInt(String.valueOf(currentLine.charAt(18)));
-                    String[] possibleValues = new String[numberOfPossibleValues];
+                    ArrayList<String> possibleValues = new ArrayList<String>();
                     for(int i = 0; i < numberOfPossibleValues; i++){
                         String currentPossibleValue = possibleValuesLine[8+i];
                         if(currentPossibleValue.contains(",")){
                             currentPossibleValue = currentPossibleValue.substring(0, currentPossibleValue.length() - 1);
                         }
 
-                        possibleValues[i] = currentPossibleValue;
+                        possibleValues.add(currentPossibleValue);
                     }
                   nodes.add(new Node(variableName, possibleValues));
                     // If the line we are parsing contains 'probability' then we want to create a conditional
@@ -84,8 +87,8 @@ public class Graph {
                         for(int i = 1; i < nodeNames.length-1; i++){
                             numberOfProbabilityLines *= nodes.get(getNodeByName(nodeNames[i])).getNumPossibleValues();
                         }
-                        double[] conditionalProbabilityTable = new double[numberOfProbabilites*numberOfProbabilityLines];
-                        String[] conditionalProbabilityTableString = new String[numberOfProbabilites*numberOfProbabilityLines];
+                        ArrayList<Double> conditionalProbabilityTable = new ArrayList<Double>();
+                        ArrayList<String> conditionalProbabilityTableString = new ArrayList<String>();
                         int count = 0;
                         int stringCount = 0;
                         for(int i = 0; i < numberOfProbabilityLines; i++){
@@ -100,7 +103,7 @@ public class Graph {
                                     stringToParse = stringToParse.substring(0, stringToParse.length() - 1);
                                 }
                                 try{
-                                    conditionalProbabilityTable[count] = Double.parseDouble(stringToParse);
+                                    conditionalProbabilityTable.add(Double.parseDouble(stringToParse));
                                     count++;
                                     givenCounter = 1;
                                 }catch (Exception e){
@@ -114,9 +117,7 @@ public class Graph {
                                             givenCounter++;
                                         }
 
-
-
-                                        conditionalProbabilityTableString[stringCount] = stringToParse;
+                                        conditionalProbabilityTableString.add(stringToParse);
                                         stringCount++;
                                     }
                                     // Catch any of the exceptions thrown when the string we are trying to parse
@@ -152,8 +153,15 @@ public class Graph {
                             conditionalProbabilityTable[i-3] =
                                     Double.parseDouble(tableLine[i].substring(0, tableLine[i].length() - 1));
                         }
+                        ArrayList<Double> conditionalProbabilityTableList = DoubleStream.of(conditionalProbabilityTable).boxed().collect(Collectors.toCollection(ArrayList::new));
                         nodes.get(getNodeByName(nodeNames[0])).
-                                updateConditionalProbabilityTable(conditionalProbabilityTable, nodeNames[0]);
+                                updateConditionalProbabilityTable(conditionalProbabilityTableList, nodeNames[0]);
+                        ArrayList<String> conditionalProbabilityTableString = new ArrayList<String>();
+//                        HEREEEE
+                        for(int i = 0; i< nodes.get(getNodeByName(nodeNames[0])).getNumPossibleValues(); i++){
+//                            conditionalProbabilityTableString.add();
+                        }
+
                     }
                 }
             }

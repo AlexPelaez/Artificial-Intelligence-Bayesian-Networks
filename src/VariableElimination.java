@@ -21,9 +21,9 @@ public class VariableElimination {
             indexesOfAllNodesToUpdate.add(indexOfNodeToUpdateEvidence);
             ArrayList<Node> currentChildren = nodes.get(indexOfNodeToUpdateEvidence).getChildren();
             int indexOfEvidenceValue = 0;
-            String[] possibleValuesForEvidence = nodes.get(indexOfNodeToUpdateEvidence).getPossibleValues();
-            for(int j = 0; j < possibleValuesForEvidence.length; j++){
-                if(possibleValuesForEvidence[j].equals(currentEvidenceSplit[1])){
+            ArrayList<String> possibleValuesForEvidence = nodes.get(indexOfNodeToUpdateEvidence).getPossibleValues();
+            for(int j = 0; j < possibleValuesForEvidence.size(); j++){
+                if(possibleValuesForEvidence.get(j).equals(currentEvidenceSplit[1])){
                     indexOfEvidenceValue = j;
                 }
             }
@@ -33,15 +33,22 @@ public class VariableElimination {
             }
 
             for(int j = 0; j < indexesOfAllNodesToUpdate.size(); j++){
-                double[] factor = nodes.get(indexesOfAllNodesToUpdate.get(j)).
+                ArrayList<Double> factor = nodes.get(indexesOfAllNodesToUpdate.get(j)).
                         getConditionalProbabilityTable();
                 System.out.println("updating node with name: " + nodes.get(indexesOfAllNodesToUpdate.get(j)).getNodeName());
                 if(nodes.get(indexesOfAllNodesToUpdate.get(j)).getNodeName().equals(currentEvidenceSplit[0])){
-                    for(int c = 0; c < factor.length; c++){
-                        if(c%possibleValuesForEvidence.length == indexOfEvidenceValue){
-                            factor[c] = 1;
+
+
+
+
+
+
+
+                    for(int c = 0; c < factor.size(); c++){
+                        if(c%possibleValuesForEvidence.size() == indexOfEvidenceValue){
+                            factor.add(c, 1.0);
                         } else {
-                            factor[c] = 0;
+                            factor.add(c, 0.0);
                         }
                     }
                     nodes.get(indexesOfAllNodesToUpdate.get(j)).updateConditionalProbabilityTable(factor, nodes.get(indexesOfAllNodesToUpdate.get(j)).getNodeName());

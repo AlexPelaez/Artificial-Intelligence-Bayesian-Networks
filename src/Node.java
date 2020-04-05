@@ -7,9 +7,9 @@ import java.util.ArrayList;
 public class Node {
     private ArrayList<Node> children = new ArrayList<Node>();
     private ArrayList<Node> parents = new ArrayList<Node>();
-    private double[] conditionalProbabilityTable;
-    private String[] conditionalProbabilityTableString;
-    private String[] possibleValues;
+    private ArrayList<Double> conditionalProbabilityTable;
+    private ArrayList<String> conditionalProbabilityTableString;
+    private ArrayList<String> possibleValues;
     private String name;
     private int numPossibleValues;
     private boolean marked;
@@ -23,13 +23,13 @@ public class Node {
      * Returns:
      * Node: a Node object representing a Node in the bays net.
      */
-    public Node(String name, String[] possibleValues) {
+    public Node(String name, ArrayList<String> possibleValues) {
         this.name = name;
         this.possibleValues = possibleValues;
-        this.numPossibleValues = possibleValues.length;
+        this.numPossibleValues = possibleValues.size();
     }
 
-    public void updateConditionalProbabilityTableString(String[] cpt, String nodeName){
+    public void updateConditionalProbabilityTableString(ArrayList<String> cpt, String nodeName){
         this.conditionalProbabilityTableString = cpt;
         this.name = nodeName;
         printConditionalProbabilityTableString();
@@ -44,7 +44,7 @@ public class Node {
      * Return:
      * None
      */
-    public void updateConditionalProbabilityTable(double[] cpt, String nodeName){
+    public void updateConditionalProbabilityTable(ArrayList<Double> cpt, String nodeName){
         this.conditionalProbabilityTable = cpt;
         this.name = nodeName;
         printConditionalProbabilityTable();
@@ -113,11 +113,11 @@ public class Node {
         marked = x;
     }
 
-    public double[] getConditionalProbabilityTable(){
+    public ArrayList<Double> getConditionalProbabilityTable(){
         return conditionalProbabilityTable;
     }
 
-    public String[] getConditionalProbabilityTableString(){
+    public ArrayList<String> getConditionalProbabilityTableString(){
         return conditionalProbabilityTableString;
     }
 
@@ -130,7 +130,7 @@ public class Node {
         return parents;
     }
 
-    public String[] getPossibleValues(){
+    public ArrayList<String> getPossibleValues(){
         return possibleValues;
     }
     /**
@@ -161,8 +161,8 @@ public class Node {
      * none
      */
     private void printConditionalProbabilityTable() {
-        for(int i = 0; i < conditionalProbabilityTable.length; i++){
-            System.out.println(conditionalProbabilityTable[i]);
+        for(int i = 0; i < conditionalProbabilityTable.size(); i++){
+            System.out.println(conditionalProbabilityTable.get(i));
         }
     }
     /**
@@ -175,8 +175,8 @@ public class Node {
      * none
      */
     private void printConditionalProbabilityTableString() {
-        for(int i = 0; i < conditionalProbabilityTableString.length; i++){
-            System.out.println(conditionalProbabilityTableString[i]);
+        for(int i = 0; i < conditionalProbabilityTableString.size(); i++){
+            System.out.println(conditionalProbabilityTableString.get(i));
         }
     }
 }
